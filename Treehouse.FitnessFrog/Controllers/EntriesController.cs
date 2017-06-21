@@ -11,6 +11,7 @@ namespace Treehouse.FitnessFrog.Controllers
 {
     public class EntriesController : Controller
     {
+        // Yang namanya sama kayak class, dinamakan constructor
         private EntriesRepository _entriesRepository = null;
 
         public EntriesController()
@@ -39,9 +40,40 @@ namespace Treehouse.FitnessFrog.Controllers
             return View(entries);
         }
 
+        //Buat get
         public ActionResult Add()
         {
-            return View();
+            var entry = new Entry()
+            {
+                Date = DateTime.Today
+            };
+            return View(entry);
+        }
+
+        //Buat post
+        //[ActionName("Add"), HttpPost] // *
+        [HttpPost]
+        //public ActionResult AddSave() // Pasangannya yang *
+        //public ActionResult Add(DateTime? date, int? activityId, double? duration, 
+        //    Entry.IntensityLevel? intensity, bool? exclude, string notes) // ? memperbolehkan null, diganti ke bwah
+        public ActionResult Add(Entry entry)
+        {
+            //string date = Request.Form["Date"]; // *
+
+            ////salah satu cara biar ketika di save gak langsung hilang. Nantinya dipake buat validasi
+            //ViewBag.Date = date;
+            //ViewBag.Activity = activityId;
+            //ViewBag.Duration = duration;
+            //ViewBag.Intensity = intensity;
+            //ViewBag.Exclude = exclude;
+            //ViewBag.Notes = notes;
+
+            if(ModelState.IsValid) //
+            {
+                _entriesRepository.AddEntry(entry);
+                return RedirectToAction("Index");
+            }
+            return View(entry);
         }
 
         public ActionResult Edit(int? id)

@@ -30,7 +30,7 @@ namespace Treehouse.FitnessFrog.Data
                         e.Activity = a; // Set the entry's Activity property
                         return e; // Return the entry
                     }
-                    )
+                )
                 .OrderByDescending(e => e.Date)
                 .ThenByDescending(e => e.Id)
                 .ToList();
