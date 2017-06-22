@@ -74,6 +74,7 @@ namespace Treehouse.FitnessFrog.Models
         /// <summary>
         /// The duration for the entry (in minutes).
         /// </summary>
+        [Range(1,200000)]
         public double Duration { get; set; }
 
         /// <summary>
@@ -89,6 +90,7 @@ namespace Treehouse.FitnessFrog.Models
         /// <summary>
         /// The notes for the entry.
         /// </summary>
+        [MaxLength(10, ErrorMessage = "Jangan curhat wooi!!!")]
         public string Notes { get; set; }
     }
 }

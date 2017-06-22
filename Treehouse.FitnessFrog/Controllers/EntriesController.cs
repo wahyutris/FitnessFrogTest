@@ -43,16 +43,19 @@ namespace Treehouse.FitnessFrog.Controllers
         //Buat get
         public ActionResult Add()
         {
-            var entry = new Entry()
-            {
-                Date = DateTime.Today
-            };
-            return View(entry);
-        }
+            PopulateSelectedList();
+            return View();
 
+            //var entry = new Entry()
+            //{
+            //    Date = DateTime.Today
+            //};
+            //return View(entry);
+        }
+                
         //Buat post
         //[ActionName("Add"), HttpPost] // *
-        [HttpPost]
+        [HttpPost] // atribut buat menangkap atribut post
         //public ActionResult AddSave() // Pasangannya yang *
         //public ActionResult Add(DateTime? date, int? activityId, double? duration, 
         //    Entry.IntensityLevel? intensity, bool? exclude, string notes) // ? memperbolehkan null, diganti ke bwah
@@ -73,6 +76,8 @@ namespace Treehouse.FitnessFrog.Controllers
                 _entriesRepository.AddEntry(entry);
                 return RedirectToAction("Index");
             }
+
+            PopulateSelectedList();
             return View(entry);
         }
 
@@ -83,7 +88,24 @@ namespace Treehouse.FitnessFrog.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            return View();
+            Entry entry = _entriesRepository.GetEntry((int)id);
+
+            PopulateSelectedList();
+
+            return View(entry);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(Entry entry)
+        {
+            if (ModelState.IsValid) //
+            {
+                _entriesRepository.UpdateEntry(entry);
+                return RedirectToAction("Index");
+            }
+
+            PopulateSelectedList();
+            return View(entry);
         }
 
         public ActionResult Delete(int? id)
@@ -93,7 +115,21 @@ namespace Treehouse.FitnessFrog.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            return View();
+            Entry entry = _entriesRepository.GetEntry((int)id);            
+
+            return View(entry);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            _entriesRepository.DeleteEntry(id);
+            return RedirectToAction("Index");
+        }
+
+        private void PopulateSelectedList()
+        {
+            ViewBag.SelectListItem = new SelectList(Data.Data.Activities, "Id", "Name");
         }
     }
 }
